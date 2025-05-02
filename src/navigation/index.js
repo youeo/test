@@ -8,6 +8,9 @@ import SecondScreen from '../screens/SecondScreen';
 import Profile from '../components/profile';
 import Select_cate from '../components/select_cate';
 import Select_ingre from '../components/select_ingre';
+import Select_main from '../components/select_main';
+import LoadingScreen from '../screens/LoadingScreen';
+import Recommend from '../components/recommend';
 
 
 const Stack = createNativeStackNavigator();
@@ -23,6 +26,9 @@ function AppNavigation() {
         <Stack.Screen name="Profile" component={Profile} />
         <Stack.Screen name="Select_cate" component={Select_cate} />
         <Stack.Screen name="Select_ingre" component={Select_ingre} />
+        <Stack.Screen name="Select_main" component={Select_main} />
+        <Stack.Screen name="Loading" component={LoadingScreen} />
+        <Stack.Screen name="Recommend" component={Recommend} />
       </Stack.Navigator>
     </NavigationContainer>
   );

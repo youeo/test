@@ -80,7 +80,7 @@ export default function HomeScreen() {
             </Pressable>
             <Pressable
                 className="flex justify-center mb-4 space-y-1"
-                onPress={()=> navigation.navigate('RecipeDetail', {...item})}
+                onPress={()=> navigation.navigate('Seemore')}
             >
               <View style={{height: 180,  width: 180}} className="bg-gr rounded-3xl flex-col justify-center items-center">
                 <Text style={{fontSize: hp(2.8)}} className="font-semibold text-ye pb-3">나의 레시피</Text>
