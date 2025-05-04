@@ -13,10 +13,11 @@ export default function Select_cate() {
     return (
         <Animated.View entering={FadeInDown.delay(100).duration(600).springify().damping(12)} className="flex-1 flex-col">
             <StatusBar hidden={true} />
+            
             {/* 뒤로가기 */}
             <Animated.View entering={FadeIn.delay(200).duration(1000)} className="w-full flex-row justify-between items-center pt-14">
                 <TouchableOpacity onPress={()=> navigation.goBack()} className="p-2 rounded-full ml-5 bg-gr">
-                    <ChevronLeftIcon size={hp(3.5)} strokeWidth={4.5} color="#fbbf24" />
+                    <ChevronLeftIcon size={hp(3)} strokeWidth={4.5} color="#fbbf24" />
                 </TouchableOpacity>
             </Animated.View>
             

@@ -9,7 +9,7 @@ import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Categories2 from './categories2';
 
-const CATEGORIES = ['전체', '육류', '수산물', '채소', '과일', '유제품'];
+const CATEGORIES = ['전체', '육류', '수산물', '채소', '과일', '유제품', '가공식품'];
 //제가 적당히 넣었는데 재료를 하나하나 다 넣을지 고민하셔서 약간만 추가했습니다.
 const INGREDIENTS = {
   육류: ['소고기', '돼지고기', '닭', '양고기'],
@@ -17,6 +17,7 @@ const INGREDIENTS = {
   채소: ['상추', '양파', '당근'],
   과일: ['사과', '바나나'],
   유제품: ['우유', '치즈'],
+  가공식품: ['김치', '햄']
 };
 
 export default function Select_ingre() {
@@ -117,7 +118,7 @@ export default function Select_ingre() {
                 style={{fontSize: hp(1.5)}}
                 className="flex-1 text-base mb-0 pl-3 tracking-wider"
               />
-              <View className="bg-white rounded-full p-3 pt-1.5">
+              <View className="bg-white rounded-full px-3 pt-2.5">
                 <AntDesign name="search1" size={hp(2.5)} color="#ffab00"/>
               </View>
             </View>

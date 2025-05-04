@@ -32,7 +32,7 @@ export default function Select_main() {
         </Animated.View>
 
         {/* 재료 리스트 */}
-        <View style={{flex: 0.3}}>
+        <View style={{flex: 0.3}} className="mx-10">
           <ScrollView contentContainerStyle={styles.ingredientsWrap}>
             {selectedIngredients.map((item, index) => (
             <TouchableOpacity
@@ -54,7 +54,7 @@ export default function Select_main() {
         </View>
 
         <View style={[styles.selectedBox, {flex: 0.4}]}>
-          <Text className="mx-10" style={{ fontSize: hp(5), color: 'black', marginBottom: 5, textAlign: 'center', fontWeight: 'bold' }}>요리의 주인공을 골라주세요!</Text>
+          <Text className="mx-10" style={{ fontSize: hp(4.6), color: 'black', marginBottom: 5, textAlign: 'center', fontWeight: 'bold' }}>요리의 주인공을 골라주세요!</Text>
         </View>
 
 
