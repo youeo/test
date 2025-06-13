@@ -1,5 +1,5 @@
-import { View, Text, Pressable, Image, FlatList } from 'react-native'
-import React from 'react'
+import { View, Text, Pressable, Image, FlatList, Dimensions, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import MasonryList from '@react-native-seoul/masonry-list';
 import { mealData } from '../constants';
@@ -8,11 +8,33 @@ import Loading from './loading';
 import { CachedImage } from '../helpers/image';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios';
 
 // 메인에서 오늘의 추천 레시피 보여주기
 
-export default function Recipes({categories, meals}) {
+export default function Recipes() {
+
     const navigation = useNavigation();
+    const [meals, setMeals] = useState([]);
+
+    useEffect(() => {
+        getRecommendedRecipes();
+    }, []);
+
+    const getRecommendedRecipes = async () => {
+        try {
+        const response = await axios.get('https://themealdb.com/api/json/v1/1/search.php?s=');
+        if (response?.data?.meals) {
+            setMeals(response.data.meals.slice(0, 5)); // 최대 5개
+        }
+        } catch (err) {
+        console.log('Error fetching recipes: ', err.message);
+        }
+    };
+
+    const numColumns = 2;
+    const imageSize = (Dimensions.get('window').width - wp(12)) / 2;
+
   return (
     <View className="space-y-3 -mb-3">
         <View className="flex-row justify-between items-center pt-2 pb-2 bg-ye">
@@ -20,29 +42,31 @@ export default function Recipes({categories, meals}) {
             <AntDesign paddingRight={16} name="doubleright" size={hp(2)} color="#43794b" onPress={()=> navigation.navigate('SecondScreen')}/>
         </View>
       <View className="pt-3 mx-4">
-        {
-            categories.length==0 || meals.length==0?(
-                <Loading size="large" className="mt-20" />
-            ): (
-                <FlatList
-                    horizontal
-                    data={meals}
-                    renderItem={({item, i}) => (
-                        <RecipeCard
-                        item={item}
-                        index={i}
-                        navigation={navigation}
-                        />
-                    )}
-                    keyExtractor={(item) => item.idMeal}
-                    initialNumToRender={5}
-                    //마지막 어디에 도달하면 onEndReached 행동을 수행할지 최대가 1 (클수록 빨리 함)
-                    onEndReachedThreshold={0.8}
-                    windowSize={2}
-                    showsHorizontalScrollIndicator={true}
-                />
-            )
-        }
+        {/* 레시피 이미지 목록 */}
+        <FlatList
+        horizontal
+        data={meals}
+        keyExtractor={(item) => item.idMeal}
+        scrollEnabled={true}
+        renderItem={({ item }) => (
+            <TouchableOpacity
+            onPress={() => navigation.navigate('RecipeDetail', { ...item })}
+            >
+            <Image
+                source={{ uri: item.strMealThumb }}
+                style={{
+                width: imageSize,
+                height: hp(20),
+                borderRadius: 16,
+                marginLeft: 5,
+                marginRight: 5,
+                backgroundColor: '#f3f3f3',
+                }}
+                resizeMode="cover"
+            />
+            </TouchableOpacity>
+        )}
+        />
             
       </View>
     </View>

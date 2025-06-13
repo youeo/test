@@ -1,79 +1,82 @@
-import { View, Text, ScrollView, Image, TextInput, StatusBar, TouchableOpacity } from 'react-native'
+import { View, Text, ScrollView, Image, TextInput, StatusBar, TouchableOpacity, Dimensions, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { ChevronLeftIcon, ClockIcon, FireIcon } from 'react-native-heroicons/outline';
-import AntDesign from '@expo/vector-icons/AntDesign';
-import Categories from '../components/categories';
 import axios from 'axios';
-import Recipes2 from '../components/recipes2';
+
 export default function SecondScreen() {
 
   const navigation = useNavigation();
-  const [activeCategory, setActiveCategory] = useState('Beef');
-  const [categories, setCategories] = useState([]);
   const [meals, setMeals] = useState([]);
 
-  useEffect(()=>{
-    getCategories();
-    getRecipes();
-  },[])
+  useEffect(() => {
+    getRecommendedRecipes();
+  }, []);
 
-  const handleChangeCategory = category=>{
-    getRecipes(category);
-    setActiveCategory(category);
-    setMeals([]);
-  }
+  const getRecommendedRecipes = async () => {
+    try {
+      const response = await axios.get('https://themealdb.com/api/json/v1/1/search.php?s=');
+      if (response?.data?.meals) {
+        setMeals(response.data.meals.slice(0, 5)); // 최대 5개
+      }
+    } catch (err) {
+      console.log('Error fetching recipes: ', err.message);
+    }
+  };
 
-  const getCategories = async ()=>{
-    try{
-      const response = await axios.get('https://themealdb.com/api/json/v1/1/categories.php');
-      // console.log('got categories: ',response.data);
-      if(response && response.data){
-        setCategories(response.data.categories);
-      }
-    }catch(err){
-      console.log('error: ',err.message);
-    }
-  }
-  const getRecipes = async (category="Beef")=>{
-    try{
-      const response = await axios.get(`https://themealdb.com/api/json/v1/1/filter.php?c=${category}`);
-      // console.log('got recipes: ',response.data);
-      if(response && response.data){
-        setMeals(response.data.meals);
-      }
-    }catch(err){
-      console.log('error: ',err.message);
-    }
-  }
+  const numColumns = 2;
+  const imageSize = (Dimensions.get('window').width - wp(12)) / 2;
+
   return (
     <View className="flex-1 bg-white">
       <StatusBar hidden={true} />
+      
+      {/* 뒤로가기 버튼 */}
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        className="absolute top-12 left-5 z-10 p-2 rounded-full bg-gr"
+      >
+        <ChevronLeftIcon size={hp(3.5)} strokeWidth={4.5} color="#fbbf24" />
+      </TouchableOpacity>
+
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{paddingBottom: 50}}
-        className="space-y-6 pt-2"
+        contentContainerStyle={{ paddingTop: hp(12), paddingBottom: hp(5), paddingHorizontal: wp(5) }}
       >
-        
-      {/* 뒤로가기 */}
-      <Animated.View entering={FadeIn.delay(200).duration(1000)} className="w-full flex-row justify-between items-center pt-14">
-        <TouchableOpacity onPress={()=> navigation.goBack()} className="p-2 rounded-full ml-5 bg-gr">
-            <ChevronLeftIcon size={hp(3.5)} strokeWidth={4.5} color="#fbbf24" />
-        </TouchableOpacity>
-      </Animated.View>
+        <Animated.View entering={FadeInDown.delay(100).duration(600).springify().damping(12)}>
+          {/* 제목 */}
+          <Text style={{ fontSize: hp(2.3) }} className="font-semibold text-neutral-700 text-center mb-4">
+            오늘의 추천 레시피
+          </Text>
 
-        {/* categories */}
-        <View>
-          { categories.length>0 && <Categories categories={categories} activeCategory={activeCategory} handleChangeCategory={handleChangeCategory} /> }
-        </View>
-
-        {/* recipes */}
-        <View>
-          <Recipes2 meals={meals} categories={categories} />
-        </View>
+          {/* 레시피 이미지 목록 */}
+          <FlatList
+            data={meals}
+            numColumns={numColumns}
+            keyExtractor={(item) => item.idMeal}
+            scrollEnabled={false}
+            columnWrapperStyle={{ justifyContent: 'space-between', marginBottom: hp(2) }}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate('RecipeDetail', { ...item })}
+              >
+                <Image
+                  source={{ uri: item.strMealThumb }}
+                  style={{
+                    width: imageSize,
+                    height: hp(25),
+                    borderRadius: 16,
+                    backgroundColor: '#f3f3f3',
+                  }}
+                  resizeMode="cover"
+                />
+              </TouchableOpacity>
+            )}
+          />
+        </Animated.View>
       </ScrollView>
     </View>
-  )
+  );
 }

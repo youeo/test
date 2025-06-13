@@ -7,6 +7,8 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import axios from 'axios';
 import Recipes from '../components/recipes';
 import Todaysfood from '../components/Todaysfood';
+import Loading from '../components/loading';
+import MasonryList from '@react-native-seoul/masonry-list';
 
 // 메인화면
 
@@ -15,10 +17,12 @@ export default function HomeScreen() {
   const [activeCategory, setActiveCategory] = useState('Beef');
   const [categories, setCategories] = useState([]);
   const [meals, setMeals] = useState([]);
+
   const navigation = useNavigation();
 
   useEffect(()=>{
     getCategories();
+    getRecipes();
     getRecipes();
   },[])
 
@@ -106,7 +110,7 @@ export default function HomeScreen() {
 
         {/* 오늘의 추천 레시피 */}
         <View>
-          <Recipes meals={meals} categories={categories} />
+          <Recipes />
         </View>
 
         {/* 오늘의 식재료 상식 */}

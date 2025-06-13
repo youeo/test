@@ -12,11 +12,69 @@ import { AntDesign } from '@expo/vector-icons';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
+const Item = ({ title, author, time, recipe}) => (
+  <ScrollView
+    className="mx-5"
+    style={{marginTop: 15}}
+    showsHorizontalScrollIndicator={true}
+  >
+    <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#ddd', borderWidth: 1, borderColor: '#bab8b8'}} className="space-x-2 rounded-2xl px-3 py-3">
+      <View style={{flex: 0.3}}>
+        <Image source={require('../../assets/images/placeholder.jpg')}
+          style={{width: 80, height: 80}}
+          className="rounded-full" />
+      </View>
+      <View style={{flex: 0.6}} className="space-y-2">
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+          <Text className="font-semibold text-lg">{title}</Text>
+          <Text className="text-xs text-gray-400">{author}</Text>
+          <View style={{
+            backgroundColor: '#fbbf24',   // 노란색 배경 (#fbbf24 도 OK)
+            borderRadius: 9999,           // 완전한 원형
+            paddingHorizontal: 10,
+            paddingVertical: 4,
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignSelf: 'flex-start',      // 원하는 위치 제어
+          }}>
+            <Text className="text-xs text-white font-semibold">{time}</Text>
+          </View>
+        </View>
+        <Text className="text-sm">
+          {String(recipe[0]).length > 15 ? `${String(recipe[0]).slice(0, 15)}...` : recipe}
+        </Text>
+      </View>
+      <View style={{flex: 0.1}} className="items-end justify-end">
+        <AntDesign name="doubleright" size={hp(2)} color="black" onPress={false}/>
+      </View>
+    </View>
+  </ScrollView>
+);
+
 export default function Recommend() {
 
     const [showModal, setShowModal] = useState(true);
     const [activeTab, setActiveTab] = useState('possible');
     const navigation = useNavigation();
+
+    const [rec, setrec] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    const getRec = async ()=>{
+      try{
+        const response = await axios.get(`http://43.200.200.161:8080/api/getRecipe3`);
+        // console.log('got recipes: ',response.data);
+        if(response && response.data){
+          setrec(response.data);
+        }
+      }catch(err){
+        console.log('error: ',err.message);
+      }
+    }
+
+    useEffect(() => {
+        getRec();
+    })
 
     // const filteredRecipes = recipes.filter(recipe =>
     //     activeTab === 'possible' ? recipe.available : !recipe.available
@@ -77,47 +135,23 @@ export default function Recommend() {
                 </View>
               </View>
 
-              <ScrollView
-                style={{flex: 1}} className="mx-5 space-y-4"
-                showsHorizontalScrollIndicator={true}
-                >
-                <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#ddd', borderWidth: 1, borderColor: '#bab8b8'}} className="space-x-2 rounded-2xl px-3 py-3">
-                  <View style={{flex: 0.3}}>
-                    <Image source={require('../../assets/images/김치볶음밥.jpg')}
-                     style={{width: 80, height: 80}}
-                     className="rounded-full" />
-                  </View>
-                  <View style={{flex: 0.6}} className="space-y-2">
-                    <Text className="font-semibold text-lg">김치볶음밥</Text>
-                    <Text className="text-sm">고소하고 달달한 맛의 김치볶음밥...</Text>
-                  </View>
-                  <View style={{flex: 0.1}} className="items-end justify-end">
-                    <AntDesign name="doubleright" size={hp(2)} color="black" onPress={false}/>
-                  </View>
-                </View>
-                <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#ddd', borderWidth: 1, borderColor: '#bab8b8'}} className="space-x-2 rounded-2xl px-3 py-3">
-                  <View style={{flex: 0.3}}>
-                    <Image source={require('../../assets/images/김치찌개.jpg')}
-                     style={{width: 80, height: 80}}
-                     className="rounded-full" />
-                  </View>
-                  <View style={{flex: 0.6}} className="space-y-2">
-                    <Text className="font-semibold text-lg">김치찌개</Text>
-                    <Text className="text-sm">칼칼하고 진한 집밥 김치찌개 레시피...</Text>
-                  </View>
-                  <View style={{flex: 0.1}} className="items-end justify-end">
-                    <AntDesign name="doubleright" size={hp(2)} color="black" onPress={false}/>
-                  </View>
-                </View>
-              </ScrollView>
-
-              {/* 레시피 리스트 */}
-              {/* <FlatList
-              data={filteredRecipes}
-              keyExtractor={(item, index) => `${item.name}-${index}`}
-              renderItem={renderItem}
-              contentContainerStyle={{ padding: 10 }}
-              /> */}
+              {/* 테스트 */}
+              <View style={{flex: 0.85}}>
+                {/* <Text>아이템의 개수: {rec.length}</Text> */}
+                {
+                  isLoading && rec.length==0 ? (
+                      <Loading size="large" className="mt-20" />
+                  ): (
+                      <MasonryList
+                          data={rec}
+                          keyExtractor={(item) => item.code.toString()}
+                          numColumns={1}
+                          showsHorizontalScrollIndicator = {true}
+                          renderItem={({item}) => <Item title={item.name} author={item.author} time={item.time} recipe={item.recipe}/>}
+                      />
+                  )
+                }
+              </View>
           </View>
           </Modal>
         </Animated.View>
