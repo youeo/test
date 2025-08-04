@@ -1,17 +1,17 @@
 import * as React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from '../screens/my_ej/HomeScreen';
-import WelcomeScreen from '../screens/my_ej/WelcomeScreen';
-import RecipeDetailScreen from '../screens/my_ej/RecipeDetailScreen';
-import TodaysRecipesScreen from '../screens/my_ej/TodaysRecipesScreen';
-import ProfileScreen from '../screens/my_ej/ProfileScreen';
-import Select_cateScreen from '../screens/my_ej/Select_cateScreen';
-import Select_ingreScreen from '../screens/my_ej/Select_ingreScreen';
-import Select_mainScreen from '../screens/my_ej/Select_mainScreen';
-import LoadingScreen from '../screens/my_ej/LoadingScreen';
-import RecommendScreen from '../screens/my_ej/RecommendScreen';
-import Recipes from '../screens/my_ej/recipes';
+import HomeScreen from '../screens/recipe_search/HomeScreen';
+import WelcomeScreen from '../screens/recipe_search/WelcomeScreen';
+import RecipeDetailScreen from '../screens/recipe_search/RecipeDetailScreen';
+import TodaysRecipesScreen from '../screens/recipe_search/TodaysRecipesScreen';
+import ProfileScreen from '../screens/recipe_search/ProfileScreen';
+import Select_cateScreen from '../screens/recipe_search/Select_cateScreen';
+import Select_ingreScreen from '../screens/recipe_search/Select_ingreScreen';
+import Select_mainScreen from '../screens//Select_mainScreen';
+import LoadingScreen from '../screens/recipe_search/LoadingScreen';
+import RecommendScreen from '../screens/recipe_search/RecommendScreen';
+import Recipes from '../screens/recipe_search/recipes';
 
 //---------------------------------------------
 
