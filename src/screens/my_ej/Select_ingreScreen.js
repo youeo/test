@@ -7,10 +7,10 @@ import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { ChevronLeftIcon } from 'react-native-heroicons/outline';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import Categories2 from './categories2';
 
 const CATEGORIES = ['전체', '육류', '수산물', '채소', '과일', '유제품', '가공식품'];
 //제가 적당히 넣었는데 재료를 하나하나 다 넣을지 고민하셔서 약간만 추가했습니다.
+
 const INGREDIENTS = {
   육류: ['소고기', '돼지고기', '닭', '양고기'],
   수산물: ['연어', '고등어', '참치', '새우'],
@@ -20,11 +20,11 @@ const INGREDIENTS = {
   가공식품: ['김치', '햄']
 };
 
-export default function Select_ingre() {
+export default function Select_ingreScreen() {
 
     const navigation = useNavigation();
-    const [activeCategory, setActiveCategory] = useState('Beef');
-    const [categories, setCategories] = useState([]);
+    const [activeCategory, setActiveCategory] = useState('전체');
+    const allCategories = Object.values(CATEGORIES).flat()
     const [meals, setMeals] = useState([]);
 
     const [selectedCategory, setSelectedCategory] = useState('전체');
@@ -32,11 +32,12 @@ export default function Select_ingre() {
     const [selectedIngredients, setSelectedIngredients] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [customInput, setCustomInput] = useState('');
-      const allIngredients = selectedCategory === '전체'
+    const allIngredients = selectedCategory === '전체'
       ? Object.values(INGREDIENTS).flat()
       : INGREDIENTS[selectedCategory] || [];
 
-    const filtered = allIngredients.filter(i => i.includes(search));
+    const filtered_c = allCategories.filter(i => i.includes(search));
+    const filtered_i = allIngredients.filter(i => i.includes(search));
 
     const addIngredient = (item) => {
       if (!selectedIngredients.includes(item)) {
@@ -84,7 +85,7 @@ export default function Select_ingre() {
         const response = await axios.get('https://themealdb.com/api/json/v1/1/categories.php');
         // console.log('got categories: ',response.data);
         if(response && response.data){
-          setCategories(response.data.categories);
+          //setCategories(response.data.categories);
         }
       }catch(err){
         console.log('error: ',err.message);
@@ -117,6 +118,8 @@ export default function Select_ingre() {
                 placeholderTextColor={'gray'}
                 style={{fontSize: hp(1.5)}}
                 className="flex-1 text-base mb-0 pl-3 tracking-wider"
+                value={search}
+                onChangeText={setSearch}
               />
               <View className="bg-white rounded-full px-3 pt-2.5">
                 <AntDesign name="search1" size={hp(2.5)} color="#ffab00"/>
@@ -125,24 +128,54 @@ export default function Select_ingre() {
           </View>
 
           {/* 카테고리 */}
-          <View className="pt-4">
-            { categories.length>0 && <Categories2 categories={categories} activeCategory={activeCategory} handleChangeCategory={handleChangeCategory} /> }
-            <Text style={{fontSize: hp(2)}} className="pt-6 mx-4 font-semibold text-neutral-600">{activeCategory}</Text>
+          <View style={{flex: 0.1}}>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              className="space-x-3 mx-1"
+              contentContainerStyle={{paddingHorizontal: 15}}
+            >
+              {
+                filtered_c.map((item, index)=>{
+                    let activeButtonClass = item == activeCategory? ' bg-amber-400': ' bg-black/10';
+                    return (
+                        <TouchableOpacity
+                            key={item}
+                            onPress={() => {
+                              setActiveCategory(item);       // UI에 표시할 현재 카테고리
+                              setSelectedCategory(item);     // 실제 재료 필터 기준
+                            }}
+                            className="flex items-center space-y-1"
+                        >
+                            <View className={"rounded-full p-[7px]"+activeButtonClass}>
+                              <Text className="font-semibold text-neutral-600 m-1 mt-0" style={{fontSize: hp(1.6)}}>
+                                  {item}
+                              </Text>
+                            </View>
+                        </TouchableOpacity>
+                    )
+                })
+              }
+            </ScrollView>
+          </View>
+
+          <View style={{flex: 0.1}}>
+              <Text style={{fontSize: hp(2)}} className="mx-5 p-1 font-bold text-neutral-600">{activeCategory}</Text>
           </View>
 
           {/* 재료 리스트 */}
           <ScrollView contentContainerStyle={styles.ingredientsWrap}>
-            {filtered.map((item) => (
+            {filtered_i.map((item) => (
               <TouchableOpacity
                 key={item}
                 onPress={() => addIngredient(item)}
-                style={styles.ingredientButton}
+                style={styles.button}
               >
                 <Text>{item}</Text>
               </TouchableOpacity>
             ))}
             <TouchableOpacity
-              style={[styles.ingredientButton, { backgroundColor: '#ddd' }]}
+              style={[styles.button, { backgroundColor: '#ddd' }]}
               onPress={() => setModalVisible(true)}
             >
               <Text>+ 추가</Text>
@@ -203,7 +236,7 @@ const styles = StyleSheet.create({
   ingredientsWrap: {
     flexDirection: 'row', flexWrap: 'wrap', flex: 0.15, marginLeft: 11, marginRight: 11,
   },
-  ingredientButton: {
+  button: {
     backgroundColor: '#d9d9d9', fontSize: hp(1.6), padding: 10, borderRadius: 20, margin: 5,
   },
   selectedBox: {

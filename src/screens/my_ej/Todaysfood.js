@@ -12,7 +12,7 @@ export default function Todaysfood() {
           </View>
 
           <View className="space-y-2 flex-col justify-center items-center pt-4 pb-4">
-              <Image source={require('../../assets/images/carrot.jpg')} style={{borderRadius: 30, height: hp(20), width: hp(40)}}/>
+              <Image source={require('../../../assets/images/carrot.jpg')} style={{borderRadius: 30, height: hp(20), width: hp(40)}}/>
               <View className="flex-row">
                 <Text className="text-lg font-bold">당근</Text>
                 <Text className="ml-1 pt-2 justify-center items-center">의 효능....</Text>

@@ -7,7 +7,7 @@ import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import { ChevronLeftIcon, ClockIcon, FireIcon } from 'react-native-heroicons/outline';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function Profile() {
+export default function ProfileScreen() {
   const navigation = useNavigation();
   return (
     <View className="flex-1 bg-white pt-2">
@@ -21,7 +21,7 @@ export default function Profile() {
       </Animated.View>
 
       <View className="flex-row space-y-3 space-x-3 justify-left items-center mx-4">
-          <Image source={require('../../assets/images/avatar.png')} style={{height: hp(15), width: hp(15)}} />
+          <Image source={require('../../../assets/images/avatar.png')} style={{height: hp(15), width: hp(15)}} />
           <Text className="font-bold text-3xl">김철수</Text>
       </View>
     </View>

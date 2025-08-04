@@ -8,7 +8,7 @@ import { ChevronLeftIcon, ClockIcon, FireIcon } from 'react-native-heroicons/out
 import AntDesign from '@expo/vector-icons/AntDesign';
 import React from 'react'
 
-export default function Select_cate() {
+export default function Select_cateScreen() {
     const navigation = useNavigation();
     return (
         <Animated.View entering={FadeInDown.delay(100).duration(600).springify().damping(12)} className="flex-1 flex-col">

@@ -2,10 +2,10 @@ import { View, Text, Pressable, Image, FlatList, Dimensions, TouchableOpacity } 
 import React, { useEffect, useState } from 'react'
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import MasonryList from '@react-native-seoul/masonry-list';
-import { mealData } from '../constants';
+import { mealData } from '../../constants';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import Loading from './loading';
-import { CachedImage } from '../helpers/image';
+import { CachedImage } from '../../helpers/image';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
@@ -39,7 +39,7 @@ export default function Recipes() {
     <View className="space-y-3 -mb-3">
         <View className="flex-row justify-between items-center pt-2 pb-2 bg-ye">
             <Text style={{fontSize: hp(2)}} className="mx-4 font-semibold text-gr">오늘의 추천 레시피</Text>
-            <AntDesign paddingRight={16} name="doubleright" size={hp(2)} color="#43794b" onPress={()=> navigation.navigate('SecondScreen')}/>
+            <AntDesign paddingRight={16} name="doubleright" size={hp(2)} color="#43794b" onPress={()=> navigation.navigate('TodaysRecipes')}/>
         </View>
       <View className="pt-3 mx-4">
         {/* 레시피 이미지 목록 */}

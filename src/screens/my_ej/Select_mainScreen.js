@@ -10,7 +10,7 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 
 // backgroundColor: 'papayawhip' 이 색상 이쁘다
 
-export default function Select_main() {
+export default function Select_mainScreen() {
   const route = useRoute();
   const { selectedIngredients } = route.params;
 

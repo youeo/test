@@ -4,7 +4,6 @@ import Animated, { FadeInDown, FadeIn } from 'react-native-reanimated';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import MasonryList from '@react-native-seoul/masonry-list';
-import { CachedImage } from '../helpers/image';
 import axios from 'axios';
 import Loading from './loading';
 import { StatusBar } from 'expo-status-bar'
@@ -20,7 +19,7 @@ const Item = ({ title, author, time, recipe}) => (
   >
     <View style={{flex: 1, flexDirection: 'row', backgroundColor: '#ddd', borderWidth: 1, borderColor: '#bab8b8'}} className="space-x-2 rounded-2xl px-3 py-3">
       <View style={{flex: 0.3}}>
-        <Image source={require('../../assets/images/placeholder.jpg')}
+        <Image source={require('../../../assets/images/placeholder.jpg')}
           style={{width: 80, height: 80}}
           className="rounded-full" />
       </View>
@@ -51,7 +50,7 @@ const Item = ({ title, author, time, recipe}) => (
   </ScrollView>
 );
 
-export default function Recommend() {
+export default function RecommendScreen() {
 
     const [showModal, setShowModal] = useState(true);
     const [activeTab, setActiveTab] = useState('possible');
@@ -59,21 +58,52 @@ export default function Recommend() {
 
     const [rec, setrec] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [callCount, setCallCount] = useState(0);
 
-    const getRec = async ()=>{
-      try{
-        const response = await axios.get(`http://43.200.200.161:8080/api/getRecipe3`);
-        // console.log('got recipes: ',response.data);
+    const testSearchFromAI = async () => {
+
+      const url = `http://43.200.200.161:8080/recipes/searchFromAI`;
+      const token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI4IiwiaWF0IjoxNzU0MTE3MDg5LCJleHAiOjE3NTQxMjA2ODl9.zz75cNG0Pu6tmslbi6BTTktUhK7v3qtxhfSQZD_4ew";
+
+      const requestData = {
+        mainIngredients: {
+          name: '돼지고기',
+          count: '200g',
+          type: 1  // 육류
+        },
+        subIngredients: [
+          { name: '양파', count: '1개', type: 2 },  // 채소
+          { name: '마늘', count: '2쪽', type: 2 }
+        ],
+        Banned: 0,  // 금지 재료 코드 예시
+        Tool: 1     // 도구 코드 예시
+      };
+
+      try {
+        const response = await axios.post(url, requestData, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        console.log('AI 추천 레시피 결과:', response.data);
         if(response && response.data){
           setrec(response.data);
+          setIsLoading(false);
         }
-      }catch(err){
-        console.log('error: ',err.message);
+      } catch (error) {
+        console.error('API 요청 실패:', error.message);
+        setIsLoading(false);
       }
+
     }
 
+    // 이후에 여러개 가져오기 위한 조건문 포함
     useEffect(() => {
-        getRec();
+      if (callCount < 1) {
+        testSearchFromAI();
+        setCallCount(prev => prev + 1);
+      }
     })
 
     // const filteredRecipes = recipes.filter(recipe =>

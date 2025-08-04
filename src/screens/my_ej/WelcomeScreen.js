@@ -27,7 +27,7 @@ export default function WelcomeScreen() {
       {/* logo image with rings */}
       <Animated.View className="bg-white/20 rounded-full" style={{padding: ring2padding}}>
         <Animated.View className="bg-white/20 rounded-full" style={{padding: ring1padding}}>
-            <Image source={require('../../assets/images/welcome.png')}
+            <Image source={require('../../../assets/images/welcome.png')}
                 style={{width: hp(20), height: hp(20)}} />
         </Animated.View>
       </Animated.View>

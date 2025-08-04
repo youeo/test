@@ -6,7 +6,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 import { ChevronLeftIcon, ClockIcon, FireIcon } from 'react-native-heroicons/outline';
 import axios from 'axios';
 
-export default function SecondScreen() {
+export default function TodaysRecipesScreen() {
 
   const navigation = useNavigation();
   const [meals, setMeals] = useState([]);
